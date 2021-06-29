@@ -1,0 +1,68 @@
+# WEB/API KEYCLOAK INGRESS 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-web-ingress
+  namespace: {{ .Release.name }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+      - {{ .Release.Name }}.nhsnlink.org
+      secretName: {{ .Release.Name }}-tls
+    - hosts:
+      - {{ .Release.Name }}-api.nhsnlink.org
+      secretName: {{ .Release.Name }}-tls
+    - hosts:
+      - oauth.nhsnlink.org
+      secretName: {{ .Release.Name }}-tls
+  rules:
+  - host: {{ .Release.Name }}.nhsnlink.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-web
+            port: 
+              number: 80
+  - host: {{ .Release.Name }}-api.nhsnlink.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-api
+            port: 
+              number: 80
+---
+# CQF INGRESS
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-cqf-ingress
+  namespace: {{ .Release.Name }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+spec:
+  tls:
+    - hosts:
+      - {{ .Release.Name }}-cqf.nhsnlink.org
+      secretName: demo-tls
+      
+  rules:
+  - host: {{ .Release.Name }}-cqf.nhsnlink.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-cqf
+            port: 
+              number: 80

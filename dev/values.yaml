@@ -1,0 +1,14 @@
+web:
+  container:
+    image: 'lantanagroup.azurecr.io/link-web'
+    version: 'latest'
+    
+api:
+  container:
+    image: 'lantanagroup.azurecr.io/link-api'
+    version: 'latest'
+cqf:
+  container:
+    image: 'hapiproject/hapi'
+    version: '5.4.1'
+

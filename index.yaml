@@ -1,3 +1,14 @@
 apiVersion: v1
-entries: {}
-generated: "2021-06-29T15:50:23.3675697-04:00"
+entries:
+  dev:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2021-06-29T18:19:23.925924078-04:00"
+    description: NHSNLink DEV chart
+    digest: 12e0c7d0e0375faa542d71bd8150b5ec0910cdd04b29414cf25ee9b66dcaa521
+    name: dev
+    type: application
+    urls:
+    - https://github.com/michael-misiaszek/helm-charts/dev-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-06-29T18:19:23.916130905-04:00"

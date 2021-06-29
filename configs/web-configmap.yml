@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+  namespace: demo
+data:
+  local.json: |
+    {
+      "apiUrl": "https://demo-api.nhsnlink.org",
+      "oauth": {
+        "issuer": "https://oauth.nhsnlink.org/auth/realms/NHSNLink",
+        "clientId": "nhsnlink-app",
+        "scope": "openid profile email"
+      },
+      "smart": [{
+        "issuer": "https://fhir-ehr.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
+        "clientId": "df44deda-de6b-42a4-82a9-4af1ff944cf4",
+        "scope": "launch openid profile fhirUser user/*.* user/Account.read user/AllergyIntolerance.read user/Appointment.read user/Binary.read user/Condition.read user/Coverage.read user/Device.read user/DocumentReference.read user/Encounter.read user/Immunization.read user/MedicationRequest.read user/Observation.read user/Organization.read user/Patient.read user/Practitioner.read user/Procedure.read user/RelatedPerson.read"
+      }, {
+        "issuer": "https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
+        "clientId": "df44deda-de6b-42a4-82a9-4af1ff944cf4",
+        "scope": "launch openid profile fhirUser user/*.* user/Account.read user/AllergyIntolerance.read user/Appointment.read user/Binary.read user/Condition.read user/Coverage.read user/Device.read user/DocumentReference.read user/Encounter.read user/Immunization.read user/MedicationRequest.read user/Observation.read user/Organization.read user/Patient.read user/Practitioner.read user/Procedure.read user/RelatedPerson.read"
+      }]
+    }

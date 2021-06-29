@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.name }}-web
+  namespace: {{ .Release.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.name }}-web
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.name }}-web
+    spec:
+      containers:
+        - name: {{ .Release.name }}-web
+          ports:
+            - containerPort: 80
+          image: {{ .Values.web.container.image }}:{{ .Values.web.container.version }}
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/nginx/html/assets/local.json
+              subPath: local.json
+      nodeSelector:
+        usage: webapi
+      volumes:
+        - name: config
+          configMap:
+            name: web-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.name }}-api
+  namespace: {{ .Release.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.name }}-api
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.name }}-api
+    spec:
+      containers:
+        - name: {{ .Release.name }}-api
+          ports:
+            - containerPort: 8080
+          image: {{ .Values.api.container.image }}:{{ .Values.api.container.version }}
+          volumeMounts:
+          - name: config
+            mountPath: /api-local.yml
+            subPath: api-local.yml
+          env:
+            - name: SPRING_CONFIG_LOCATION
+              value: 'file:/api-local.yml'
+      nodeSelector:
+        usage: webapi
+      volumes:
+      - name: config
+        configMap:
+          name: api-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.name }}-cqf
+  namespace: {{ .Release.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.name }}-cqf
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.name }}-cqf
+    spec:
+      containers:        
+        - name: {{ .Release.name }}-cqf 
+          image: {{ .Values.cqf.container.image }}:{{ .Values.cqf.container.version }}
+          volumeMounts:
+            - name: config
+              mountPath: /application.yml
+              subPath: application.yml
+          env:
+            - name: SERVER_ADDRESS_R4
+              value: 'https://localhost:8080/fhir'
+            - name: SPRING_CONFIG_LOCATION
+              value: 'file:/application.yml'
+      nodeSelector:
+        usage: db
+      volumes:
+        - name: config
+          configMap:
+            name: cqf-config
